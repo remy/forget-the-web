@@ -1,5 +1,3 @@
-var http = require('http');
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World\nApp (ftw) is running..');
-}).listen(10884);
+var connect = require('connect');
+
+connect.createServer(connect.static(__dirname)).listen(parseInt(process.argv[2]) || 80);

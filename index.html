@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/ftw.appcache">
+<head>
+<meta charset=utf-8 />
+<meta id="meta" name="viewport" content="width=max-width; initial-scale=1.0" /> 
+<title>Forget the Web</title>
+<style>
+* { margin: 0; padding: 0; }
+html { 
+  font-family: menlo, monospace; 
+  line-height: 1; 
+  background: #ccc -webkit-radial-gradient(rgba(127, 127, 127, 0.5), rgba(127, 127, 127, 0.5) 35%, rgba(0, 0, 0, 0.7)); 
+  height: 100%;
+  overflow-y: scroll;
+  display: box;
+  box-orient: vertical;
+  box-pack: center;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-pack: center;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-pack: center;
+  position: relative;
+}
+body { width: 100%; max-width: 720px; margin: 0 auto; background: #fff; -webkit-box-shadow: 0 5px 80px #505050; min-height: 100%; }
+iframe { display: none; }
+#confDetails { display: none; padding: 20px; }
+.confDetails #confDetails { display: block; }
+#listing { display: none; padding: 20px; overflow: auto; max-height: 85%; }
+.listing #listing { display: block; }
+.loading #loading { display: block; }
+#loading { display: none; }
+li {
+  list-style: none;
+}
+nav li {
+  display: block;
+  float: left;
+  background: #ccc;
+  margin-right: 10px;
+}
+nav {
+  overflow: hidden;
+  border-bottom: 2px solid #666;
+}
+
+nav li a {
+  display: block;
+  padding: 10px;
+  color: #000;
+  text-decoration: none;
+}
+
+nav li a:hover,
+nav li a:focus {
+  background: #666;
+  color: #fff;
+}
+
+#conferences li.hasnotes a:after {
+  content: ' \00A4';
+  font-size: 11px;
+}
+
+#conferences li.hasnotes a:hover:after {
+  content: ' (has notes)';
+  font-size: 11px;
+}
+
+#conferences a {
+  display: block;
+  padding: 5px 10px;
+  color: #000;
+  text-decoration: none;
+}
+
+#conferences a:hover {
+  background: #eee;
+}
+
+#conferences a:hover:before {
+  content: '\203A \0020';
+}
+
+.future:before {
+  content: '\21D2 \0020';
+}
+
+.past:before {
+  content: '\2192 \0020';
+}
+
+.next:before {
+  content: '\00BB \0020';
+}
+
+#conferences .future, 
+#conferences .past, 
+#conferences .next {
+  display: none;
+}
+
+#future .future,
+#past .past,
+#next .next,
+#all #conferences a {
+  display: block;
+}
+
+#about {
+  display: none;
+  padding: 20px;
+}
+
+.about #about {
+  display: block;
+}
+
+#about p {
+  margin: 14px 0;
+  line-height: 1.8em;
+}
+
+#about li {
+  list-style-type: square;
+  margin-left: 18px;
+  margin: 7px 0 7px 18px;
+}
+
+form > * {
+  margin: 14px 0;
+}
+
+textarea {
+  display: block;
+  width: 90%;
+  height: 200px;
+  font-family: menlo, monospace;
+  font-size: 16px;
+  padding: 10px;
+}
+
+input {
+  padding: 5px;
+  font-family: menlo, monospace;
+  font-size: 16px;  
+}
+
+#changeuser {
+  padding: 0 20px;
+  background: #eee;
+}
+
+#changeuser p {
+  margin: 0;
+}
+
+input[type=range] {
+  height: 0; /* stupid trick to vertically align the input */
+}
+
+#updated:not(:empty):before {
+  content: 'Updated: ';
+}
+
+#ratingText:not(:empty):after {
+  content: '\272D';
+  font-size: 20px;
+}
+
+#loading {
+  text-align: center;
+  padding: 50px 50px 100px 50px;
+  background: url(data:image/gif;base64,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) no-repeat 50% 60%;
+}
+
+@media screen and (max-width: 320px) {
+  nav {
+    font-size: 12px;
+  }
+  
+  nav li a {
+    padding: 10px 7px;
+  }
+
+  #confDetails,
+  #listing,
+  #about {
+    padding: 10px;
+  }
+  
+  form > * {
+    margin: 7px 0;
+  }
+  
+  #about p {
+    line-height: 1.1;
+  }
+  
+  #changeuser {
+    padding: 0 10px;
+  }
+}
+</style>
+</head>
+<body class="loading">
+  <nav>
+    <ul>
+      <li><a href="/next">Next</a></li>
+      <!-- ids aren't actually required as hooks, they're so we can add some nice numbers for the demo -->
+      <li><a id="futurelink" href="/future">Future</a></li>
+      <li><a id="pastlink" href="/past">Past</a></li>
+      <!-- <li><a href="/all">All</a></li> -->
+      <li><a href="/about">About</a></li>
+    </ul>
+  </nav>
+  <div id="loading">
+    Loading...
+  </div>
+  <div id="listing">
+    <ul id="conferences"></ul>
+  </div>
+  <form id="confDetails">
+    <h1 id="title">Conference</h1>
+    <h2><time id="date">Date</time></h2>
+    <time id="updated">Last updated</time>
+    <div>
+      <label for="rating">Rating</label>
+      <select type="range" name="rating" id="rating">
+        <option>0</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+      <output id="ratingText">
+    </div>
+    <label for="notes" hidden>Notes</label>
+    <textarea id="notes">Notes</textarea>
+    <p><a id="url" href="[url]">More on lanyrd</a></p>
+  </form>
+  <div id="about">
+    <form id="changeuser">
+      <label for="user">Current user:</label>
+      <input id="user" name="user">
+      <input type="submit" value="Change">
+      <p><small>Note: chaning the user will lose the saved notes.</small></p>
+    </form>
+    <p>Just a little demo for the "Forget the Web" talk given by <a href="http://twitter.com/rem">@rem</a> at SkillSwaps using the following tech:</p>
+    <ul>
+      <li>History API</li>
+      <li>AppCache for offline access and url goodness</li>
+      <li>Web SQL Databases and IndexedDB</li>
+      <li>Web Storage and events</li>
+    </ul>
+  </div>
+<script src="/datastore.js"></script>
+<script src="/range.js"></script>
+<script>
+var body = document.body,
+    navLinks = {
+      past: document.getElementById('pastlink'),
+      future: document.getElementById('futurelink')
+    },
+    lanyrd = [], // all event data - merged from online against local
+    datastore = new DataStore(); // supports SQL and IndexedDB
+    
+// is this insane?
+var confDetails = new (function () {
+  var elements = {
+    title: document.getElementById('title'),
+    date: document.getElementById('date'),
+    updated: document.getElementById('updated'),
+    rating: document.getElementById('rating'),
+    notes: document.getElementById('notes'),
+    url: document.getElementById('url')
+  };
+  
+  elements.rating.onchange = function () {
+    document.getElementById('ratingText').value = this.value;
+  };
+  
+  elements.notes.form.onchange = elements.notes.form.oninput = function () {
+    confDetails.notes = elements.notes.value;
+    confDetails.rating = elements.rating.value;
+    
+    datastore.update({
+      id: confDetails.id,
+      date: confDetails.originalDate,
+      notes: confDetails.notes,
+      updated: (new Date()).toString(),
+      rating: confDetails.rating,
+      url: confDetails.url,
+      title: confDetails.title
+    });
+    // dirty - but just added it quickly for completeness of this demo
+    document.querySelector('a[href="/conf' + confDetails.id + '"]').parentNode.className = 'hasnotes';
+  };
+  
+  
+  return {
+    title: '',
+    date: '',
+    originalDate: '',
+    updated: '',
+    rating: '',
+    notes: '',
+    url: '',
+    id: '',
+    reset: function () {
+      this.rating = 0;
+      this.notes = '';
+      this.updated = '';
+    },
+    update: function () {
+      for (var key in elements) {
+        if (key == 'url') {
+          elements[key].href = this[key];
+        } else if (key == 'rating' || key == 'notes') {
+          elements[key].value = this[key];
+        } else {
+          elements[key].innerHTML = this[key];
+        }
+      }
+      document.getElementById('ratingText').value = elements.rating.value;
+    }
+  };
+})();
+
+function loadLanyrd(user, callback) {
+  var body = document.body,
+      iframe = document.createElement('iframe');
+  iframe.src = 'about:blank';
+  body.appendChild(iframe);
+    
+  window.lanyrdData = function (nodes) {
+    var lanyrd = [];
+    [].forEach.call(nodes, function (el) {
+      var title = el.getElementsByTagName('a')[0],
+          date = el.getElementsByTagName('abbr')[0]; // probably change to time in the future
+      lanyrd.push({
+        id: title.href.replace('http://lanyrd.com', ''),
+        title: title.innerHTML,
+        url: title.href,
+        date: date.getAttribute('title')
+      });
+    });
+    body.removeChild(iframe);
+
+    callback(lanyrd);
+  };
+
+  // gotta love iframes :)
+  var frameDocument = iframe.contentDocument || iframe.contentWindow.document;
+  frameDocument.open();
+  frameDocument.write('<head><' + 'script src="http://cdn.lanyrd.net/badges/person-v1.min.js"><' + '/script></head><body>' + 
+  '<div id="listing" class="lanyrd-target-splat"><a href="http://lanyrd.com/people/' + user + '/" class="lanyrd-splat lanyrd-type-all lanyrd-template-mini lanyrd-context-all lanyrd-number-30"></a></div><script>var listing = document.getElementById("listing"); var t = setInterval(function () { if (listing.firstChild.nodeName == "DIV") { clearInterval(t); window.top.lanyrdData(listing.getElementsByTagName("li")); }}, 100);<' + '/script>');
+  frameDocument.close();
+}
+
+
+function two(s) {
+  return (s+'').length == 2 ? s : '0' + s;
+}
+
+function showConferenceDetails(id) {
+  // lookup details from database based on url
+  datastore.get(id, function (conf) {
+    confDetails.reset();
+    for (var key in conf) {
+      if (key == 'date') { 
+        confDetails.date = time.shortdate(conf.date);
+        confDetails.originalDate = conf.date;
+      }
+      else if (typeof confDetails[key] !== 'undefined') confDetails[key] = conf[key];
+    }
+    confDetails.update();
+    body.className = 'confDetails';
+  }, function () {
+    // console.log('failed to get conference');
+  });
+}
+
+function updateLanyrdConferences(data) {
+  var conferences = document.getElementById('conferences'),
+      d = new Date(),
+      day = two(d.getDate()),
+      mon = two(d.getMonth() + 1), //months are zero based
+      year = d.getFullYear(),
+      today = [year, mon, day].join('-'),
+      next = null,
+      counters = { 
+        next: 0,
+        past: 0,
+        future: 0
+      };
+    
+  conferences.innerHTML = '';
+
+  lanyrd = lanyrd.concat(data).sort(function (a, b) {
+    return a.date < b.date ? -1 : 1;
+  });
+  
+  lanyrd.forEach(function (conf, i) {
+    var li = document.createElement('li'),
+        link = document.createElement('a');
+
+    link.appendChild(document.createTextNode(conf.title));
+    link.href = '/conf' + conf.id; 
+    li.appendChild(link);
+    if (conf.notes) li.className = 'hasnotes';
+    link.onclick = function (event) {
+      event.preventDefault();
+      history.pushState({
+        page: 'confDetails',
+        id: conf.id
+      }, '', '/conf' + conf.id);
+      
+      showConferenceDetails(conf.id);
+    };
+
+    if (conf.date < today) {
+      counters.past++;
+      link.className = 'past';
+      next = link;
+    } else if (conf.date == today) {
+      link.className = 'next';
+      next = null;
+    } else {
+      counters.future++;
+      link.className = 'future';
+      if (next !== null || i === 0) {
+        link.className += ' next';
+        next = null;
+      } 
+      
+    }
+    
+    conferences.appendChild(li);
+  });
+  
+  navLinks.past.innerHTML = 'Past (' + counters.past + ')';
+  navLinks.future.innerHTML = 'Future (' + counters.future + ')';
+}
+
+function showConferences(type) {
+  body.className = 'listing';
+  body.id = type;
+}
+
+function initRouter() {
+  var popstate = window.onpopstate = function () {
+    // don't bother with event.state - I can get most of what I need from the path
+    router(location.pathname);
+  };
+  
+  var nav = document.getElementsByTagName('nav')[0].getElementsByTagName('a');
+  for (var i = 0; i < nav.length; i++) {
+    nav[i].onclick = function (event) {
+      event.preventDefault();
+      history.pushState(null, '', this.href);
+      router(location.pathname);
+    };
+  }
+  
+  router(location.pathname);
+}
+
+function router(path) {
+  if (path.indexOf('/conf') === 0) {
+    showConferenceDetails(path.substr(5));
+  } else if (path === '/' || path === '/index.html') {
+    showConferences('next');
+  } else if (path === '/about') {
+    body.id = '';
+    body.className = 'about';
+  } else {
+    showConferences(path.substr(1));
+  }
+}
+
+function setuser(user) {
+  document.getElementById('user').value = user;
+  loadLanyrd(user, function (data) {
+    var newdata = [];
+    for (var i = 0; i < data.length; i++) {
+      datastore.add(data[i], function (conf) {
+        // only push on newly added data
+        updateLanyrdConferences([conf]);
+      });
+    }
+  });
+  
+}
+
+document.getElementById('changeuser').onsubmit = function (event) {
+  event.preventDefault();
+  // perform a reset
+  datastore.drop();
+  datastore.init();
+  lanyrd = [];
+  localStorage.user = document.getElementById('user').value;
+  setuser(localStorage.user);
+};
+
+window.addEventListener('storage', function (event) {
+  if (event.key == 'user') {
+    if (confirm('Do you want to change the user to ' + event.newValue + ' on this window too?')) {
+      console.log('changing user');
+      setuser(event.newValue);
+    }
+  }
+});
+
+// need to open our database before we can continue
+datastore.init(function () {
+  setuser(localStorage.user || 'rem');
+  datastore.getall(updateLanyrdConferences);
+  initRouter();
+});
+</script>
+
+<script>
+var time = function () {
+  var monthDict = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return {
+    shortdate: function (d) {
+      var values = d.split("-"),
+          mon = monthDict[parseInt(values[1], 10)],
+          day = parseInt(values[2], 10),
+          year = parseInt(values[0], 10),
+          thisyear = (new Date()).getFullYear();
+          
+      if (thisyear === year) {
+        return day + ' ' + mon;
+      } else {
+        return day + ' ' + mon + ' \'' + (year+'').substr(2, 2);
+      }
+    }
+  };
+}();
+
+</script>
+</body>
+</html>

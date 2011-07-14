@@ -1,0 +1,16 @@
+CACHE MANIFEST
+
+CACHE:
+index.html
+range.js
+datastore.js
+
+FALLBACK:
+# force everything through the index url
+/ /
+
+# this shouldn't match anything unless it's on another domain
+NETWORK:
+*
+
+# v14
