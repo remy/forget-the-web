@@ -323,12 +323,11 @@ var confDetails = new (function () {
     url: document.getElementById('url')
   };
   
-  elements.rating.onchange = function () {
-    console.log('rating change');
-    document.getElementById('ratingText').value = this.value;
-  };
+  // elements.rating.onchange = function () {
+  //   document.getElementById('ratingText').value = this.value;
+  // };
   
-  elements.notes.onchange = elements.rating.onchange = function () {
+  elements.notes.onchange = function () { // elements.rating.onchange = 
     confDetails.notes = elements.notes.value;
     confDetails.rating = elements.rating.value;
     
