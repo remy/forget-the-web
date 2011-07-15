@@ -309,7 +309,8 @@ var body = document.body,
       future: document.getElementById('futurelink')
     },
     lanyrd = [], // all event data - merged from online against local
-    datastore = new DataStore(); // supports SQL and IndexedDB
+    datastore = new DataStore(), // supports SQL and IndexedDB
+    click = document.createEvent('TouchEvent') ? 'touchstart' : 'click';
     
 // is this insane?
 var confDetails = new (function () {
@@ -458,7 +459,7 @@ function updateLanyrdConferences(data) {
     link.href = '/conf' + conf.id; 
     li.appendChild(link);
     if (conf.notes) li.className = 'hasnotes';
-    link.onclick = function (event) {
+    link['on' + click] = function (event) {
       event.preventDefault();
       history.pushState({
         page: 'confDetails',
@@ -505,7 +506,7 @@ function initRouter() {
   
   var nav = document.getElementsByTagName('nav')[0].getElementsByTagName('a');
   for (var i = 0; i < nav.length; i++) {
-    nav[i].onclick = function (event) {
+    nav[i]['on' + click] = function (event) {
       event.preventDefault();
       history.pushState(null, '', this.href);
       router(location.pathname);

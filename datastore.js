@@ -76,10 +76,7 @@ DataStore.prototype = {
     
   },
   update: function (conf) {
-    console.log('save');
     if (this.dbtype == 'indexeddb') {
-      console.log('should be storing...');
-      console.log(conf);
       var transaction = this.db.transaction(['notes'], IDBTransaction.READ_WRITE, 0),
           store = transaction.objectStore('notes'),
           request = store.put(conf); 
