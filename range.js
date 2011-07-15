@@ -16,7 +16,7 @@ rangeTest.setAttribute('type', 'range');
 
 var bool = rangeTest.type !== 'text';
 if (bool) {
-  rangeTest.style.cssText = 'position:absolute;visibility:hidden;'
+  rangeTest.style.cssText = 'position:absolute;visibility:hidden;';
   rangeTest.value = smile;
   if (rangeTest.style.WebkitAppearance !== undefined ) {
 

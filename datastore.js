@@ -44,13 +44,12 @@ DataStore.prototype = {
       // web sql databases
       this.dbtype = 'sql';
       this.db = openDatabase('Conference Notes', '1.0', 'notes', 5 * 1024 * 1024);
-      
       this.db.transaction(function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS ' + 
                       'notes(id TEXT PRIMARY KEY ASC, title TEXT, rating INTEGER, date DATE, notes TEXT, updated DATE, url TEXT UNIQUE)', [], callback, callback);
       });
     } else {
-      console.log('you are fucked');
+      console.log('you are fucked...');
     }
   },
   add: function (conf, success, error) {
@@ -80,21 +79,8 @@ DataStore.prototype = {
       var transaction = this.db.transaction(['notes'], IDBTransaction.READ_WRITE, 0),
           store = transaction.objectStore('notes'),
           request = store.put(conf); 
-          
-          /*
-          {
-            id: conf.id,
-            title: conf.title,
-            url: conf.url,
-            notes: conf.notes,
-            rating: conf.rating,
-            date: conf.originalDate,
-            updated: new Date()
-          }
-          */
-      request.onsuccess = function () {
-        console.log('saved fine');
-      };
+
+      // request.onsuccess = function () {};
       request.onerror = function () {
         console.log('failed to save', [].slice.call(arguments));
       };
@@ -152,7 +138,8 @@ DataStore.prototype = {
     } else if (this.dbtype == 'sql') {
       this.db.transaction(function (tx) {
         tx.executeSql('SELECT * FROM notes WHERE id = ?', [id], function (tx, rs) {
-          success(rs.rows.item(0));
+          var row = rs.rows.item(0);
+          success(row);
         }, error);
       });
     }
