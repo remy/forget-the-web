@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" manifest="/ftw.appcache">
 <head>
-<script>
+<script type="disabled">
 var cacheStatusValues = [];
 cacheStatusValues[0] = 'uncached';
 cacheStatusValues[1] = 'idle';
@@ -399,7 +399,9 @@ function loadLanyrd(user, callback) {
   // gotta love iframes :)
   var frameDocument = iframe.contentDocument || iframe.contentWindow.document;
   frameDocument.open();
-  frameDocument.write('<head><' + 'script src="http://cdn.lanyrd.net/badges/person-v1.min.js"><' + '/script></head><body>' + 
+  var url = 'http://cdn.lanyrd.net/badges/person-v1.min.js';
+  url = 'http://node.remysharp.com:8081';
+  frameDocument.write('<head><' + 'script src="' + url + '"><' + '/script></head><body>' + 
   '<div id="listing" class="lanyrd-target-splat"><a href="http://lanyrd.com/people/' + user + '/" class="lanyrd-splat lanyrd-type-all lanyrd-template-mini lanyrd-context-all lanyrd-number-30"></a></div><script>var listing = document.getElementById("listing"); var t = setInterval(function () { if (listing.firstChild.nodeName == "DIV") { clearInterval(t); window.top.lanyrdData(listing.getElementsByTagName("li")); }}, 100);<' + '/script>');
   frameDocument.close();
 }
