@@ -357,7 +357,7 @@ function loadLanyrd(user, callback) {
   var frameDocument = iframe.contentDocument || iframe.contentWindow.document;
   frameDocument.open();
   var url = 'http://cdn.lanyrd.net/badges/person-v1.min.js';
-  url = 'http://node.remysharp.com:8081';
+  // url = 'http://node.remysharp.com:8081';
   frameDocument.write('<head><' + 'script src="' + url + '"><' + '/script></head><body>' + 
   '<div id="listing" class="lanyrd-target-splat"><a href="http://lanyrd.com/people/' + user + '/" class="lanyrd-splat lanyrd-type-all lanyrd-template-mini lanyrd-context-all lanyrd-number-30"></a></div><script>var listing = document.getElementById("listing"); var t = setInterval(function () { if (listing.firstChild.nodeName == "DIV") { clearInterval(t); window.top.lanyrdData(listing.getElementsByTagName("li")); }}, 100);<' + '/script>');
   frameDocument.close();
