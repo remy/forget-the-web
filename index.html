@@ -323,6 +323,7 @@ var confDetails = new (function () {
   };
   
   elements.rating.onchange = function () {
+    console.log('rating change');
     document.getElementById('ratingText').value = this.value;
   };
   
