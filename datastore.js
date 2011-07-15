@@ -76,6 +76,7 @@ DataStore.prototype = {
     
   },
   update: function (conf) {
+    console.log('save');
     if (this.dbtype == 'indexeddb') {
       console.log('should be storing...');
       console.log(conf);
