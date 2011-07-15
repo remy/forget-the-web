@@ -326,7 +326,7 @@ var confDetails = new (function () {
     document.getElementById('ratingText').value = this.value;
   };
   
-  elements.notes.form.onblur = function () {
+  elements.notes.onchange = elements.rating.onchange = function () {
     confDetails.notes = elements.notes.value;
     confDetails.rating = elements.rating.value;
     
