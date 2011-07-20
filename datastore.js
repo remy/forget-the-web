@@ -44,12 +44,13 @@ DataStore.prototype = {
       // web sql databases
       this.dbtype = 'sql';
       this.db = openDatabase('Conference Notes', '1.0', 'notes', 5 * 1024 * 1024);
+
       this.db.transaction(function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS ' + 
                       'notes(id TEXT PRIMARY KEY ASC, title TEXT, rating INTEGER, date DATE, notes TEXT, updated DATE, url TEXT UNIQUE)', [], callback, callback);
       });
     } else {
-      console.log('you are fucked...');
+      console.log('you are screwed');
     }
   },
   add: function (conf, success, error) {
@@ -138,8 +139,7 @@ DataStore.prototype = {
     } else if (this.dbtype == 'sql') {
       this.db.transaction(function (tx) {
         tx.executeSql('SELECT * FROM notes WHERE id = ?', [id], function (tx, rs) {
-          var row = rs.rows.item(0);
-          success(row);
+          success(rs.rows.item(0));
         }, error);
       });
     }
