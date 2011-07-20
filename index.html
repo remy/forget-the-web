@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" manifest="/ftw.appcache">
+<html lang="en"> <!-- manifest="/ftw.appcache">-->
 <head>
 <meta charset=utf-8 />
 <meta id="meta" name="viewport" content="width=max-width; initial-scale=1.0" /> 
@@ -541,6 +541,7 @@ var time = function () {
 }();
 
 // debug info to work out when the app is being cached via @jonathanstark
+/*
 var cacheStatusValues = [];
 cacheStatusValues[0] = 'uncached';
 cacheStatusValues[1] = 'idle';
@@ -581,7 +582,7 @@ window.applicationCache.addEventListener(
     },
     false
 );
-
+*/
 //setInterval(function(){cache.update()}, 10000);
 
 </script>
